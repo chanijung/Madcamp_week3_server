@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+# from django..models import ListCharField
 
 class User(AbstractUser):
     """ Custom User Model"""
@@ -9,3 +10,5 @@ class User(AbstractUser):
     LOGIN_CHOICES = ((LOGIN_FACEBOOK, "FaceBook"), )
     login_method = models.CharField(choices=LOGIN_CHOICES,max_length=20,default=LOGIN_FACEBOOK)
     nickname = models.CharField(max_length=15, blank=True, null=True)
+    token = models.CharField(max_length=255, default='unknown token')
+

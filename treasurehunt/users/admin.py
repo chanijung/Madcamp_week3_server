@@ -18,4 +18,5 @@ class UserAdmin(UserAdmin):
         "uid",
         "nickname",
         "login_method",
+        "token"
     )

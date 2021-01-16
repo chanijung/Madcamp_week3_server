@@ -19,12 +19,13 @@ def login(request):
         login_method = data_json["method"]
         nickname = data_json["nickname"]
         uid = data_json["uid"]
+        token = data_json["token"]
         try:
             user = user_models.User.objects.get(uid=uid)
             return Response("{Result:Exists}")
         except:
             if(login_method == "facebook.com"):
-                user = user_models.User.objects.create(username=nickname, email=email, login_method=user_models.User.LOGIN_FACEBOOK, uid=uid, nickname=nickname)
+                user = user_models.User.objects.create(username=nickname, email=email, login_method=user_models.User.LOGIN_FACEBOOK, uid=uid, nickname=nickname, token=token)
                 user.save()
                 return Response("{Result:Post}")
             else:
