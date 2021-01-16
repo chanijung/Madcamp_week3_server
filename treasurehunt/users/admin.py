@@ -1,13 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from . import models
+from .models import User
 
 # admin.site.register(models.User)
-@admin.register(models.User)
+@admin.register(User)
 class UserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (("CustomProfile", {
         "fields": (
-        
             "nickname",
             "login_method",
             "uid",
@@ -16,6 +15,7 @@ class UserAdmin(UserAdmin):
 
     list_display = (
         "username",
+        "uid",
         "nickname",
         "login_method",
     )

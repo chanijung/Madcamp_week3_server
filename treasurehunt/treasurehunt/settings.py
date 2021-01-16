@@ -25,7 +25,7 @@ SECRET_KEY = '3l=$=67hay3&)@zbogp9wztx+-3u-lj=elb6fq13ql%a$kxqs('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["682855efb296.ngrok.io", "127.0.0.1"]
+ALLOWED_HOSTS = ["fd353355ee73.ngrok.io", "127.0.0.1"]
 
 
 # Application definition
@@ -37,9 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users.apps.UsersConfig',
     'rest_framework',
-    'knox'
+    'knox',
+    'users.apps.UsersConfig',
+    'treasure.apps.TreasureConfig'
 ]
 
 MIDDLEWARE = [

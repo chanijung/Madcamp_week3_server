@@ -25,6 +25,7 @@ urlpatterns = [
     # path('', RedirectView.as_view(url='/catalog/', permanent=True)),
     path('admin/', admin.site.urls),
     path('users/', include("users.urls", namespace="users")),
+    path('treasure/', include("treasure.urls", namespace="treasure"))
 ]
 
 # Use static() to add url mapping to serve static files during development (only)
