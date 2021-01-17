@@ -3,9 +3,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
 from . import models as user_models
+from treasure import models as treasure_models
 from .serializers import UserSerializer
 import json
-from firebase_admin import messaging
+# from firebase_admin import messaging
 #serialize를 한다는 것은 json이나 xml 파일 등으로 바꾸어 주는 것.
 from firebase_admin import credentials
 import firebase_admin
@@ -32,7 +33,7 @@ def login(request):
         token = data_json["token"]
 
 # test
-        send_to_token(token)
+        # send_to_token(token)
 
         try:
             user = user_models.User.objects.get(uid=uid)
@@ -52,23 +53,18 @@ def login(request):
 
 
 # messaging test
-def send_to_token(registration_token):
-    # [START send_to_token]
-    # This registration token comes from the client FCM SDKs.
-    # registration_token = 'YOUR_REGISTRATION_TOKEN'
+# def send_to_token(registration_token):
+#     # See documentation on defining a message payload.
+#     message = messaging.Message(
+#         data={
+#             'score': '850',
+#             'time': '2:45',
+#         },
+#         token=registration_token,
+#     )
 
-    # See documentation on defining a message payload.
-    message = messaging.Message(
-        data={
-            'score': '850',
-            'time': '2:45',
-        },
-        token=registration_token,
-    )
-
-    # Send a message to the device corresponding to the provided
-    # registration token.
-    response = messaging.send(message)
-    # Response is a message ID string.
-    print('Successfully sent message:', response)
-    # [END send_to_token]
+#     # Send a message to the device corresponding to the provided
+#     # registration token.
+#     response = messaging.send(message)
+#     # Response is a message ID string.
+#     print('Successfully sent message:', response)
