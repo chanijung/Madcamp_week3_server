@@ -5,8 +5,9 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import requests
 from users import models as user_models
-from . import models as treasures
+from . import models as treasure_models
 from firebase_admin import messaging
+from django.utils import timezone
 #serialize를 한다는 것은 json이나 xml 파일 등으로 바꾸어 주는 것.
 
 @csrf_exempt
@@ -26,7 +27,7 @@ def hide(request):
         latitude = data_json["latitude"]
         longitude = data_json["longitude"]
 
-        treasure = treasures.Treasure.objects.create(hider=hider, latitude=latitude, longitude=longitude)
+        treasure = treasure_models.Treasure.objects.create(hider=hider, latitude=latitude, longitude=longitude)
         treasure.save()
 
         return Response("{Result:Post}")
@@ -45,7 +46,7 @@ def hunt(request):
         longitude =  float(data_json["longitude"])
         print("request latitude: ", latitude)
         print("request longitude: ", longitude)
-        treasure_set = treasures.Treasure.objects.all()
+        treasure_set = treasure_models.Treasure.objects.all()
         # The `iterator()` method ensures only a few rows are fetched from
         # the database at a time, saving memory.
         print("Iterate through treasure set\n---------------")
@@ -62,6 +63,7 @@ def hunt(request):
                 hunter = user_models.User.objects.get(token=token)
                 hunter.close_treasure = treasure.pk
                 print("hunter's close treasure: ", hunter.close_treasure)
+                hunter.save()
                 #db에 user table - close_treasure : treasure pk
             else:
                 print("Out")
@@ -76,7 +78,17 @@ def seek(request):
     if request.method == "POST":
         data_json = json.loads(request.body)
         uid = data_json["uid"]
-        
+        user = user_models.User.objects.get(uid=uid)
+        close_treasure_pk = user.close_treasure
+        print(type(close_treasure_pk))
+        close_treasure = treasure_models.Treasure.objects.get(pk=close_treasure_pk)
+        close_treasure.seeker = uid    # Update seeker of the treasure
+        now = timezone.localtime(timezone.now())
+        date_time = now.strftime("%Y/%m/%d %H:%M:%S")
+        close_treasure.timeSought = date_time   #Update timeSought of the treasure
+        user.score += 1     #Update the score of the seeker
+        close_treasure.save()
+        user.save()
     return Response("seek post")
 
 # messaging test
