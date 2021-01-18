@@ -44,6 +44,7 @@ def hunt(request):
         token = data_json["token"]
         latitude = float(data_json["latitude"])
         longitude =  float(data_json["longitude"])
+        uid = data_json["uid"]
         print("request latitude: ", latitude)
         print("request longitude: ", longitude)
         treasure_set = treasure_models.Treasure.objects.all()
@@ -60,7 +61,8 @@ def hunt(request):
                 print("In")
                 print("----------------")
                 send_to_token(token)
-                hunter = user_models.User.objects.get(token=token)
+                print("token: ", token)
+                hunter = user_models.User.objects.get(uid=uid)
                 hunter.close_treasure = treasure.pk
                 print("hunter's close treasure: ", hunter.close_treasure)
                 hunter.save()
@@ -76,8 +78,7 @@ def hunt(request):
 @api_view(["POST"])
 def seek(request):
     if request.method == "POST":
-        data_json = json.loads(request.body)
-        uid = data_json["uid"]
+        uid = request.GET.get("uid")
         user = user_models.User.objects.get(uid=uid)
         close_treasure_pk = user.close_treasure
         print(type(close_treasure_pk))
