@@ -11,4 +11,6 @@ class User(AbstractUser):
     login_method = models.CharField(choices=LOGIN_CHOICES,max_length=20,default=LOGIN_FACEBOOK)
     nickname = models.CharField(max_length=15, blank=True, null=True)
     token = models.CharField(max_length=255, default='unknown token')
+    score = models.IntegerField(default=0)
+    close_treasure = models.IntegerField(blank=True, null=True)
 

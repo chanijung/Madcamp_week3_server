@@ -29,7 +29,6 @@ def hide(request):
         treasure = treasures.Treasure.objects.create(hider=hider, latitude=latitude, longitude=longitude)
         treasure.save()
 
-
         return Response("{Result:Post}")
 
 # 36.37432 127.36557 n1
@@ -51,18 +50,34 @@ def hunt(request):
         # the database at a time, saving memory.
         print("Iterate through treasure set\n---------------")
         for treasure in treasure_set:
+            if treasure.seeker:
+                continue
             print(treasure.hider.uid)
             print(treasure.latitude)
             print(treasure.longitude)
-            if abs(float(treasure.latitude)-latitude)<0.0001 and abs(float(treasure.longitude)-longitude)<0.0001:
+            if abs(float(treasure.latitude)-latitude)<0.00006 or abs(float(treasure.longitude)-longitude)<0.00006:
                 print("In")
                 print("----------------")
                 send_to_token(token)
+                hunter = user_models.User.objects.get(token=token)
+                hunter.close_treasure = treasure.pk
+                print("hunter's close treasure: ", hunter.close_treasure)
+                #db에 user table - close_treasure : treasure pk
             else:
                 print("Out")
                 print("----------------")
                 
         return Response("hunt post")
+
+
+@csrf_exempt
+@api_view(["POST"])
+def seek(request):
+    if request.method == "POST":
+        data_json = json.loads(request.body)
+        uid = data_json["uid"]
+        
+    return Response("seek post")
 
 # messaging test
 def send_to_token(registration_token):
@@ -74,6 +89,14 @@ def send_to_token(registration_token):
         },
         token=registration_token,
     )
+
+    # message = messaging.Message(
+    #     notification = messaging.Notification(
+    #         title = 'Treasure Hunt',
+    #         message = 'You are close to a treasure!',
+    #     ),
+    #     token=registration_token,
+    # )
 
     # Send a message to the device corresponding to the provided
     # registration token.

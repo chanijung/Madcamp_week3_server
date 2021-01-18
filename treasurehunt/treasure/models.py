@@ -7,6 +7,8 @@ class Treasure(models.Model):
     hider = models.ForeignKey("users.User",on_delete=models.CASCADE, related_name = "treasure")
     latitude = models.FloatField()
     longitude = models.FloatField()
+    seeker = models.CharField(max_length=50,unique=True, blank=True, null=True)
+    timeSought = models.CharField(max_length=30, blank=True, null=True)
     # name = models.CharField(max_length=50)
     # phone = models.CharField(max_length = 40)
     # image = models.TextField(blank=True, null=True)

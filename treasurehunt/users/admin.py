@@ -14,9 +14,12 @@ class UserAdmin(UserAdmin):
     }), )
 
     list_display = (
+        "pk",
         "username",
         "uid",
         "nickname",
         "login_method",
-        "token"
+        "token",
+        "score",
+        "close_treasure"
     )

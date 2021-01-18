@@ -10,6 +10,7 @@ import json
 #serialize를 한다는 것은 json이나 xml 파일 등으로 바꾸어 주는 것.
 from firebase_admin import credentials
 import firebase_admin
+from django.utils import timezone
 
 # export GOOGLE_APPLICATION_CREDENTIALS= "/home/ubuntu/project3/treasurehunt/treasure-hunt-d0c8c-firebase-adminsdk-vy0uh-88214ea224.json"
 # if not firebase_admin._apps:
@@ -21,6 +22,10 @@ firebase_admin.initialize_app(cred)
 @csrf_exempt
 @api_view(["GET", "POST"])
 def login(request):
+    # now = timezone.localtime(timezone.now())
+    # date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+    # date_time = now.strftime("%Y/%m/%d %H:%M:%S")
+    # print("date and time:",date_time)
     if request.method == "POST":
         print("login post")
         params_json = request.body.decode(encoding = "utf-8")
@@ -32,15 +37,13 @@ def login(request):
         uid = data_json["uid"]
         token = data_json["token"]
 
-# test
-        # send_to_token(token)
-
         try:
             user = user_models.User.objects.get(uid=uid)
+            user.token = token
             return Response("{Result:Exists}")
         except:
             if(login_method == "facebook.com"):
-                user = user_models.User.objects.create(username=nickname, email=email, login_method=user_models.User.LOGIN_FACEBOOK, uid=uid, nickname=nickname, token=token)
+                user = user_models.User.objects.create(username=nickname, email=email, login_method=user_models.User.LOGIN_FACEBOOK, uid=uid, nickname=nickname, token=token, score=0)
                 user.save()
                 return Response("{Result:Post}")
             else:
@@ -52,19 +55,3 @@ def login(request):
 
 
 
-# messaging test
-# def send_to_token(registration_token):
-#     # See documentation on defining a message payload.
-#     message = messaging.Message(
-#         data={
-#             'score': '850',
-#             'time': '2:45',
-#         },
-#         token=registration_token,
-#     )
-
-#     # Send a message to the device corresponding to the provided
-#     # registration token.
-#     response = messaging.send(message)
-#     # Response is a message ID string.
-#     print('Successfully sent message:', response)
