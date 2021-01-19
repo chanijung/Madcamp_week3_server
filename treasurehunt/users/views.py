@@ -22,13 +22,8 @@ firebase_admin.initialize_app(cred)
 @csrf_exempt
 @api_view(["GET", "POST"])
 def login(request):
-    # now = timezone.localtime(timezone.now())
-    # date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
-    # date_time = now.strftime("%Y/%m/%d %H:%M:%S")
-    # print("date and time:",date_time)
     if request.method == "POST":
         print("login post")
-        params_json = request.body.decode(encoding = "utf-8")
         data_json = json.loads(request.body)
         print(data_json)
         email = data_json["email"]
@@ -53,5 +48,12 @@ def login(request):
         print(request)
         return Response("GET")
 
-
+@csrf_exempt
+@api_view(["GET"])
+def score(request):
+    if request.method == "GET":
+        print("score get")
+        uid = request.GET.get("uid")
+        user = user_models.User.objects.get(uid=uid)
+        return Response({"score":user.score})
 
