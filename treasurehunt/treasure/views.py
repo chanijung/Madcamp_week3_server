@@ -92,6 +92,31 @@ def seek(request):
         user.save()
     return Response("seek post")
 
+
+@csrf_exempt
+@api_view(["GET"])
+def my(request):
+    if request.method == "GET":
+        uid = request.GET.get("uid")
+        treasure_set = treasure_models.Treasure.objects.all().iterator()
+        # The `iterator()` method ensures only a few rows are fetched from
+        # the database at a time, saving memory.
+        print("Iterate through treasure set\n---------------")
+        post_serialized = []
+        for treasure in treasure_set:
+            if treasure.seeker!=uid:
+                continue
+            post_serialized.append(treasure.serialize_custom())
+        # queryset = post_models.Post.objects.filter(beach=beach_obj).order_by("-created")
+        # post_serialized = []
+        # for q in queryset:
+        #     post_serialized.append(q.serialize_custom())
+        return Response(post_serialized)
+            
+
+
+
+
 # messaging test
 def send_to_token(registration_token):
     # See documentation on defining a message payload.
@@ -102,15 +127,6 @@ def send_to_token(registration_token):
         },
         token=registration_token,
     )
-
-    # message = messaging.Message(
-    #     notification = messaging.Notification(
-    #         title = 'Treasure Hunt',
-    #         message = 'You are close to a treasure!',
-    #     ),
-    #     token=registration_token,
-    # )
-
     # Send a message to the device corresponding to the provided
     # registration token.
     response = messaging.send(message)

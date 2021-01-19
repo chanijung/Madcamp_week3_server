@@ -14,3 +14,9 @@ class User(AbstractUser):
     score = models.IntegerField(default=0)
     close_treasure = models.IntegerField(blank=True, null=True)
 
+    def serialize_custom(self):
+        data = {
+            "nickname" : self.nickname,
+            "score" : self.score,
+        }
+        return data

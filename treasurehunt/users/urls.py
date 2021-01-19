@@ -5,5 +5,6 @@ app_name = "users"
 
 urlpatterns = [
     path("login/", views.login, name="login"),
-    path("score/", views.score, name="score")
+    path("score/", views.score, name="score"),
+    path("ranking/", views.ranking, name="ranking")
 ]

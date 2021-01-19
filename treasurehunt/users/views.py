@@ -57,3 +57,21 @@ def score(request):
         user = user_models.User.objects.get(uid=uid)
         return Response({"score":user.score})
 
+@csrf_exempt
+@api_view(["GET"])
+def ranking(request):
+    if request.method == "GET":
+        users = user_models.User.objects.all().order_by('-score')
+        ranking_serialized = []
+        for user in users:
+            print(type(user.nickname))
+            if user.nickname==None:
+                continue
+            ranking_serialized.append(user.serialize_custom())
+            if len(ranking_serialized)==3:
+                break
+        return Response(ranking_serialized)
+
+
+
+
