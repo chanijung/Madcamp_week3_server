@@ -85,7 +85,7 @@ def seek(request):
         close_treasure = treasure_models.Treasure.objects.get(pk=close_treasure_pk)
         close_treasure.seeker = uid    # Update seeker of the treasure
         now = timezone.localtime(timezone.now())
-        date_time = now.strftime("%Y/%m/%d %H:%M:%S")
+        date_time = now.strftime("%Y/%m/%d  %H:%M:%S")
         close_treasure.timeSought = date_time   #Update timeSought of the treasure
         user.score += 1     #Update the score of the seeker
         close_treasure.save()

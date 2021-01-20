@@ -15,7 +15,7 @@ class Treasure(models.Model):
     def serialize_custom(self):
         data = {
             "latitude" : self.latitude,
-            "longiutde": self.longitude,
+            "longitude": self.longitude,
             "timeSought": self.timeSought,
         }
         return data
